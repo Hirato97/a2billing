@@ -1,0 +1,33 @@
+{
+  "main": {
+    "port": "8000",
+    "log_type": "FILE",
+    "log_level": "debug",
+    "log_file": "tmp/console.log",
+    "log_addr": "113.164.246.7:4021",
+    "db": "enabled"
+  },
+  "db": {
+    "driver": "mysql",
+    "host": "localhost",
+    "port": "3306",
+    "username": "root",
+    "password": "",
+    "name": "a2billing",
+    "ssl_mode": "disable",
+    "timeout": 15,
+    "max_open_conns": 10,
+    "max_idle_conns": 3,
+    "conn_max_lifetime": 600
+  },
+  "redis": {
+    "address": "localhost:6379",
+    "port": "6379",
+    "database": 2,
+    "password": "RediSPwd2021"
+  },
+  "oauth": {
+    "tokenType": "Bearer",
+    "expired_in": "15552000"
+  }
+}
