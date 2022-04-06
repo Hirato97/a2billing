@@ -175,7 +175,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		return response.BadRequestMsg("call_plan is not exists")
 	}
 
-	card, err = db.CardRepo.CreateCardTransaction(ctx, card)
+	err = db.CardRepo.CreateCardTransaction(ctx, &card)
 	if err != nil {
 		log.Error("CardService", "CreateCardAndSip - CreateCard", err.Error())
 		return response.ServiceUnavailableMsg("create customer invalid")

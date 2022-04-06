@@ -18,22 +18,21 @@ func NewIaxBuddiesRepository() IaxBuddiesRepository {
 }
 func (repo *IaxBuddiesRepository) CreateIaxBuddies(ctx context.Context, iaxBuddies model.IaxBuddies) (model.IaxBuddies, error) {
 	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&iaxBuddies).Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return iaxBuddies, errors.New("create iaxBuddies failed")
-
-	} else if err != nil {
+	if err != nil {
 		return iaxBuddies, err
+
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return iaxBuddies, errors.New("create iaxBuddies failed")
 
 	}
 	return iaxBuddies, nil
 }
 func (repo *IaxBuddiesRepository) CreateIaxBuddiesTransaction(ctx context.Context, iaxBuddies model.IaxBuddies) (model.IaxBuddies, error) {
 	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&iaxBuddies).Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return iaxBuddies, errors.New("create iaxBuddies failed")
-
-	} else if err != nil {
+	if err != nil {
 		return iaxBuddies, err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return iaxBuddies, errors.New("create iaxBuddies failed")
 
 	}
 	return iaxBuddies, nil
