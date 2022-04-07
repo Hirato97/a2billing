@@ -42,25 +42,25 @@ func (repo *CallerIdRepository) GetCallerIdByCid(ctx context.Context, agentId, c
 	return callerId, nil
 }
 
-func (repo *CallerIdRepository) CreateCallerId(ctx context.Context, callerId model.CallerId) (model.CallerId, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&callerId).Exec(ctx)
+func (repo *CallerIdRepository) CreateCallerId(ctx context.Context, callerId *model.CallerId) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(callerId).Exec(ctx)
 	if err != nil {
-		return callerId, err
+		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
-		return callerId, errors.New("create callerId failed")
+		return errors.New("create callerId failed")
 
 	}
-	return callerId, nil
+	return nil
 }
-func (repo *CallerIdRepository) CreateCallerIdTransaction(ctx context.Context, callerId model.CallerId) (model.CallerId, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&callerId).Exec(ctx)
+func (repo *CallerIdRepository) CreateCallerIdTransaction(ctx context.Context, callerId *model.CallerId) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(callerId).Exec(ctx)
 	if err != nil {
-		return callerId, err
+		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
-		return callerId, errors.New("create callerId failed")
+		return errors.New("create callerId failed")
 
 	}
-	return callerId, nil
+	return nil
 }
 func (repo *CallerIdRepository) UpdateCallerIdToCard(ctx context.Context, id int, cardId int) (bool, error) {
 	resp, err := repository.BillingSqlClient.GetDB().NewUpdate().Model(&model.CallerId{}).

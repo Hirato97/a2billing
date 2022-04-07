@@ -54,7 +54,7 @@ func (service *CardService) UpdateCardCreditOfAgent(ctx context.Context, agentId
 	}
 	if isUpdated == true {
 		userId, _ := strconv.Atoi(agentId)
-		db.SystemLogRepo.CreateLog(ctx, model.SystemLog{
+		db.SystemLogRepo.CreateLog(ctx, &model.SystemLog{
 			Iduser:       userId,
 			Loglevel:     1,
 			Action:       "API EXECUTE",
@@ -90,7 +90,7 @@ func (service *CardService) AddCardCreditOfAgent(ctx context.Context, agentId, i
 	}
 	if isUpdated == true {
 		userId, _ := strconv.Atoi(agentId)
-		db.SystemLogRepo.CreateLog(ctx, model.SystemLog{
+		db.SystemLogRepo.CreateLog(ctx, &model.SystemLog{
 			Iduser:      userId,
 			Loglevel:    1,
 			Action:      "API EXECUTE",
@@ -127,7 +127,7 @@ func (service *CardService) UpdateCardStatusOfAgent(ctx context.Context, agentId
 	}
 	if isUpdated == true {
 		userId, _ := strconv.Atoi(agentId)
-		db.SystemLogRepo.CreateLog(ctx, model.SystemLog{
+		db.SystemLogRepo.CreateLog(ctx, &model.SystemLog{
 			Iduser:       userId,
 			Loglevel:     1,
 			Action:       "API EXECUTE",
@@ -188,11 +188,11 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		"status":    card.Status,
 		"call_plan": card.Tariff,
 	}
-	if callerId, err := db.CallerIdRepo.CreateCallerIdTransaction(ctx, model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
+	if err := db.CallerIdRepo.CreateCallerIdTransaction(ctx, &model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
 		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else {
-		result["cid"] = callerId.Cid
+		result["cid"] = cid
 	}
 	if card.SipBuddy == 1 {
 		sipBuddies := model.SipBuddies{
@@ -216,7 +216,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 			Cancallforward: "yes",
 			Rtpkeepalive:   "0",
 		}
-		sipBuddies, err := db.SipBuddiesRepo.CreateSipBuddiesTransaction(ctx, sipBuddies)
+		err := db.SipBuddiesRepo.CreateSipBuddiesTransaction(ctx, &sipBuddies)
 		if err != nil {
 			log.Error(err)
 			return response.ServiceUnavailableMsg("create customer invalid")
@@ -241,7 +241,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 			Regseconds:  0,
 			Trunk:       "no",
 		}
-		iaxBuddies, err := db.IaxBuddiesRepo.CreateIaxBuddiesTransaction(ctx, iaxBuddies)
+		err := db.IaxBuddiesRepo.CreateIaxBuddiesTransaction(ctx, &iaxBuddies)
 		if err != nil {
 			log.Error(err)
 			return response.ServiceUnavailableMsg("create customer invalid")

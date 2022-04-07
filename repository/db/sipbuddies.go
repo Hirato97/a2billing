@@ -16,26 +16,22 @@ func NewSipBuddiesRepository() SipBuddiesRepository {
 	repo := SipBuddiesRepository{}
 	return repo
 }
-func (repo *SipBuddiesRepository) CreateSipBuddies(ctx context.Context, sipBuddies model.SipBuddies) (model.SipBuddies, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&sipBuddies).Exec(ctx)
+func (repo *SipBuddiesRepository) CreateSipBuddies(ctx context.Context, sipBuddies *model.SipBuddies) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(sipBuddies).Exec(ctx)
 	if err != nil {
-		return sipBuddies, err
+		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
-		return sipBuddies, errors.New("create sipBuddies failed")
-
+		return errors.New("create sipBuddies failed")
 	}
-
-	return sipBuddies, nil
+	return nil
 }
-func (repo *SipBuddiesRepository) CreateSipBuddiesTransaction(ctx context.Context, sipBuddies model.SipBuddies) (model.SipBuddies, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&sipBuddies).Exec(ctx)
+func (repo *SipBuddiesRepository) CreateSipBuddiesTransaction(ctx context.Context, sipBuddies *model.SipBuddies) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(sipBuddies).Exec(ctx)
 
 	if err != nil {
-		return sipBuddies, err
+		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
-		return sipBuddies, errors.New("create sipBuddies failed")
-
+		return errors.New("create sipBuddies failed")
 	}
-
-	return sipBuddies, nil
+	return nil
 }

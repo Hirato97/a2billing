@@ -34,14 +34,14 @@ func (service *CallerIdService) AddCallerIdToCard(ctx context.Context, agentId, 
 	} else if callerIdRes != nil {
 		return response.BadRequestMsg("caller_id is already exists")
 	}
-	if callerId, err := db.CallerIdRepo.CreateCallerId(ctx, model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
+	if err := db.CallerIdRepo.CreateCallerId(ctx, &model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
 		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
-	} else if callerId.ID < 1 {
+	} else if callerIdRes.ID < 1 {
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else {
 		userId, _ := strconv.Atoi(agentId)
-		db.SystemLogRepo.CreateLog(ctx, model.SystemLog{
+		db.SystemLogRepo.CreateLog(ctx, &model.SystemLog{
 			Iduser:       userId,
 			Loglevel:     1,
 			Action:       "API EXECUTE",
@@ -84,7 +84,7 @@ func (service *CallerIdService) UpdateCallerIdToCard(ctx context.Context, agentI
 	}
 	if isUpdated == true {
 		userId, _ := strconv.Atoi(agentId)
-		db.SystemLogRepo.CreateLog(ctx, model.SystemLog{
+		db.SystemLogRepo.CreateLog(ctx, &model.SystemLog{
 			Iduser:       userId,
 			Loglevel:     1,
 			Action:       "API EXECUTE",
