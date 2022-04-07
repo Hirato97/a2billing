@@ -22,7 +22,7 @@ func NewCardService() CardService {
 func (service *CardService) GetCardsOfAgent(ctx context.Context, agentId string, limit, offset int) (int, interface{}) {
 	cards, total, err := db.CardRepo.GetCardsOfAgent(ctx, agentId, limit, offset)
 	if err != nil {
-		log.Error("CardService", "GetCardsOfAgent", err.Error())
+		log.Error(err)
 	}
 	return response.NewBaseResponsePagination(cards, limit, offset, int(total))
 }
@@ -30,7 +30,7 @@ func (service *CardService) GetCardsOfAgent(ctx context.Context, agentId string,
 func (service *CardService) GetCardsOfAgentById(ctx context.Context, agentId string, id string) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, id)
 	if err != nil {
-		log.Error("CardService", "GetCardsOfAgent", err.Error())
+		log.Error(err)
 	}
 	if card == nil {
 		return response.NotFound()
@@ -41,7 +41,7 @@ func (service *CardService) GetCardsOfAgentById(ctx context.Context, agentId str
 func (service *CardService) UpdateCardCreditOfAgent(ctx context.Context, agentId, id string, credit float64) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, id)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if card == nil {
@@ -49,7 +49,7 @@ func (service *CardService) UpdateCardCreditOfAgent(ctx context.Context, agentId
 	}
 	isUpdated, err := db.CardRepo.UpdateCCardCreditOfAgent(ctx, fmt.Sprintf("%v", card.ID), credit)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if isUpdated == true {
@@ -75,7 +75,7 @@ func (service *CardService) UpdateCardCreditOfAgent(ctx context.Context, agentId
 func (service *CardService) AddCardCreditOfAgent(ctx context.Context, agentId, id string, credit float64) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, id)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if card == nil {
@@ -85,7 +85,7 @@ func (service *CardService) AddCardCreditOfAgent(ctx context.Context, agentId, i
 	credit = card.Credit + credit
 	isUpdated, err := db.CardRepo.UpdateCCardCreditOfAgent(ctx, fmt.Sprintf("%v", card.ID), credit)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if isUpdated == true {
@@ -113,7 +113,7 @@ func (service *CardService) AddCardCreditOfAgent(ctx context.Context, agentId, i
 func (service *CardService) UpdateCardStatusOfAgent(ctx context.Context, agentId, id string, status int) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, id)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if card == nil {
@@ -122,7 +122,7 @@ func (service *CardService) UpdateCardStatusOfAgent(ctx context.Context, agentId
 
 	isUpdated, err := db.CardRepo.UpdateCCardStatusOfAgent(ctx, fmt.Sprintf("%v", card.ID), status)
 	if err != nil {
-		log.Error("CardService", "UpdateCCardCreditOfAgent", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if isUpdated == true {
@@ -149,13 +149,13 @@ func (service *CardService) UpdateCardStatusOfAgent(ctx context.Context, agentId
 func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string, card model.Card, cid string) (int, interface{}) {
 	cardRes, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, card.Username)
 	if err != nil {
-		log.Error("CardService", "CreateCardAndSip", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if cardRes != nil {
 		return response.BadRequestMsg("username is already exists")
 	}
 	if groupId, err := db.AgentRepo.GetGroupIdById(ctx, agentId); err != nil {
-		log.Error("CardService", "GetGroupIdById", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if groupId < 1 {
 		return response.BadRequestMsg("please check group configuration")
@@ -163,13 +163,13 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		card.IDGroup = groupId
 	}
 	if callerId, err := db.CallerIdRepo.GetCallerIdByCid(ctx, agentId, cid); err != nil {
-		log.Error("CardService", "GetCallerIdByCid", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if callerId != nil {
 		return response.BadRequestMsg("caller_id is already exists")
 	}
 	if tariffGroup, err := db.TariffGroupRepo.GetTariffGroupById(ctx, card.Tariff); err != nil {
-		log.Error("CardService", "GetTariffGroupById", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if tariffGroup == nil {
 		return response.BadRequestMsg("call_plan is not exists")
@@ -177,7 +177,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 
 	err = db.CardRepo.CreateCardTransaction(ctx, &card)
 	if err != nil {
-		log.Error("CardService", "CreateCardAndSip - CreateCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	}
 	result := map[string]interface{}{
@@ -189,8 +189,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		"call_plan": card.Tariff,
 	}
 	if callerId, err := db.CallerIdRepo.CreateCallerIdTransaction(ctx, model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
-		log.Error("CardService", "GetCallerIdByCid", err.Error())
-
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else {
 		result["cid"] = callerId.Cid
@@ -219,7 +218,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		}
 		sipBuddies, err := db.SipBuddiesRepo.CreateSipBuddiesTransaction(ctx, sipBuddies)
 		if err != nil {
-			log.Error("CardService", "CreateCardAndSip - CreateSipBuddies", err.Error())
+			log.Error(err)
 			return response.ServiceUnavailableMsg("create customer invalid")
 		}
 		result["sip"] = "created"
@@ -244,8 +243,7 @@ func (service *CardService) CreateCardAndSip(ctx context.Context, agentId string
 		}
 		iaxBuddies, err := db.IaxBuddiesRepo.CreateIaxBuddiesTransaction(ctx, iaxBuddies)
 		if err != nil {
-			log.Error("CardService", "CreateCardAndSip - CreateIaxBuddies", err.Error())
-
+			log.Error(err)
 			return response.ServiceUnavailableMsg("create customer invalid")
 		}
 		result["iax"] = "created"

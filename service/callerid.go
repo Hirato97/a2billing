@@ -21,7 +21,7 @@ func NewCallerIdService() CallerIdService {
 func (service *CallerIdService) AddCallerIdToCard(ctx context.Context, agentId, cardId, cid string) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, cardId)
 	if err != nil {
-		log.Error("CallerIdService", "UpdateCallerIdToCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if card == nil {
 		return response.BadRequestMsg("user_id is not exists")
@@ -29,13 +29,13 @@ func (service *CallerIdService) AddCallerIdToCard(ctx context.Context, agentId, 
 
 	callerIdRes, err := db.CallerIdRepo.GetCallerIdByCid(ctx, agentId, cid)
 	if err != nil {
-		log.Error("CallerIdService", "UpdateCallerIdToCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if callerIdRes != nil {
 		return response.BadRequestMsg("caller_id is already exists")
 	}
 	if callerId, err := db.CallerIdRepo.CreateCallerId(ctx, model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
-		log.Error("CardService", "GetCallerIdByCid", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if callerId.ID < 1 {
 		return response.ServiceUnavailableMsg("create customer invalid")
@@ -63,7 +63,7 @@ func (service *CallerIdService) AddCallerIdToCard(ctx context.Context, agentId, 
 func (service *CallerIdService) UpdateCallerIdToCard(ctx context.Context, agentId, cid, cardId string) (int, interface{}) {
 	card, err := db.CardRepo.GetCardOfAgentById(ctx, agentId, cardId)
 	if err != nil {
-		log.Error("CallerIdService", "UpdateCallerIdToCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if card == nil {
 		return response.BadRequestMsg("user_id is not exists")
@@ -71,7 +71,7 @@ func (service *CallerIdService) UpdateCallerIdToCard(ctx context.Context, agentI
 
 	callerId, err := db.CallerIdRepo.GetCallerIdByCid(ctx, agentId, cid)
 	if err != nil {
-		log.Error("CallerIdService", "UpdateCallerIdToCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else if callerId == nil {
 		return response.BadRequestMsg("caller_id is not exists")
@@ -79,7 +79,7 @@ func (service *CallerIdService) UpdateCallerIdToCard(ctx context.Context, agentI
 
 	isUpdated, err := db.CallerIdRepo.UpdateCallerIdToCard(ctx, int(callerId.ID), int(card.ID))
 	if err != nil {
-		log.Error("CallerIdService", "UpdateCallerIdToCard", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg("update callerid invalid")
 	}
 	if isUpdated == true {

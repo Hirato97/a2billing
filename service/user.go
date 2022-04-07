@@ -20,11 +20,11 @@ func NewAgentService() AgentService {
 func (service *AgentService) GenerateTokenByApiKey(ctx context.Context, apiKey string, isRefresh bool) (int, interface{}) {
 	Agent, err := db.AgentRepo.GetAgentByApiKey(ctx, apiKey)
 	if err != nil {
-		log.Error("AgentService", "GenerateTokenByApiKey", err.Error())
+		log.Error(err)
 		return response.NotFound()
 	}
 	if Agent == nil {
-		log.Error("AgentService", "GenerateTokenByApiKey", "Agent is null")
+		log.Error(err)
 		return response.NotFound()
 	}
 
@@ -35,11 +35,11 @@ func (service *AgentService) GenerateTokenByApiKey(ctx context.Context, apiKey s
 	}
 	client, err := auth.GoAuthClient.ClientCredential(clientAuth, false)
 	if err != nil {
-		log.Error("AgentService", "GenerateTokenByApiKey", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	if err != nil {
-		log.Error("AgentService", "GenerateTokenByApiKey", err.Error())
+		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	token := gin.H{

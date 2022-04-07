@@ -8,7 +8,7 @@ import (
 
 type Card struct {
 	bun.BaseModel `bun:"cc_card"`
-	ID            int64     `bun:"id,pk" json:"id"`                  //
+	ID            int64     `bun:"id,pk,autoincrement" json:"id"`    //
 	Creationdate  time.Time `bun:"creationdate" json:"creationdate"` //
 	// Firstusedate       time.Time `bun:"firstusedate" json:"firstusedate"`                //
 	// Expirationdate     time.Time `bun:"expirationdate" json:"expirationdate"`            //
@@ -83,7 +83,7 @@ type Card struct {
 
 type CardInfo struct {
 	bun.BaseModel `bun:"cc_card"`
-	ID            int64     `bun:"id,pk" json:"id"`                  //
+	ID            int64     `bun:"id,pk,autoincrement" json:"id"`    //
 	Creationdate  time.Time `bun:"creationdate" json:"creationdate"` //
 	// Firstusedate   time.Time `bun:"firstusedate" json:"firstusedate"`          //
 	// Expirationdate time.Time `bun:"expirationdate" json:"expirationdate"`      //

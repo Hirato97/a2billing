@@ -17,7 +17,7 @@ func NewCallService() CallService {
 func (service *CallService) GetCallLogs(ctx context.Context, agentId, cardId, source, fromDate, toDate string, limit, offset int) (int, interface{}) {
 	callLogs, total, err := db.CallRepo.GetCallLogs(ctx, agentId, cardId, source, fromDate, toDate, limit, offset)
 	if err != nil {
-		log.Error("ReportService", "GetAgentCallLogs", err.Error())
+		log.Error(err)
 	}
 	return response.NewBaseResponsePagination(callLogs, limit, offset, int(total))
 }
