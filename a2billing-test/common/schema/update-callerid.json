@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "#/a2billing-go-api/common/schema/update-callerid.json",
+  "title": "update-callerid",
+  "type": "object",
+  "description": "update-callerid",
+  "required": ["user_id"],
+  "properties": {
+    "user_id": {
+      "type": "string"
+    }
+  }
+}
