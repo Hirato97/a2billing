@@ -44,10 +44,11 @@ func (repo *CardRepository) UpdateCCardCreditOfAgent(ctx context.Context, id str
 		Where("id = ?", id).
 		Exec(ctx)
 
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return false, errors.New("update failed")
-	} else if err != nil {
+	if err != nil {
 		return false, err
+
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return false, errors.New("update failed")
 	}
 
 	return true, nil
@@ -58,11 +59,10 @@ func (repo *CardRepository) UpdateCCardStatusOfAgent(ctx context.Context, id str
 		Set("status = ?", status).
 		Where("id = ?", id).
 		Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return false, errors.New("update failed")
-
-	} else if err != nil {
+	if err != nil {
 		return false, err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return false, errors.New("update failed")
 
 	}
 	return true, nil
@@ -87,26 +87,28 @@ func (repo *CardRepository) GetCardOfAgentById(ctx context.Context, agentId, id 
 	}
 	return card, nil
 }
-func (repo *CardRepository) CreateCard(ctx context.Context, card model.Card) (model.Card, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&card).Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return card, errors.New("create card failed")
+func (repo *CardRepository) CreateCard(ctx context.Context, card *model.Card) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(card).Exec(ctx)
+	if err != nil {
+		return err
 
-	} else if err != nil {
-		return card, err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return errors.New("create card failed")
+
 	}
 
-	return card, nil
+	return nil
 }
-func (repo *CardRepository) CreateCardTransaction(ctx context.Context, card model.Card) (model.Card, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&card).Exec(ctx)
+func (repo *CardRepository) CreateCardTransaction(ctx context.Context, card *model.Card) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(card).Exec(ctx)
 
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return card, errors.New("create card failed")
+	if err != nil {
+		return err
 
-	} else if err != nil {
-		return card, err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return errors.New("create card failed")
+
 	}
 
-	return card, nil
+	return nil
 }

@@ -145,10 +145,14 @@ func (handler *CardHandler) CreateCard(c *gin.Context) {
 		return
 	}
 	card := model.Card{
-		Address:            "",
-		Expirationdate:     time.Time{},
-		Creationdate:       time.Now(),
-		Firstusedate:       time.Time{},
+		Address: "",
+		// Expirationdate:     dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
+		Creationdate: time.Now(),
+		// Firstusedate:       dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
+		// Lastuse:            dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
+		// Servicelastrun:     dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
+		// LastNotification:   dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
+		// LockDate:           dataUtil.ParseFromStringToTime("1997-01-01 00:00:01"),
 		Enableexpire:       0,
 		Expiredays:         0,
 		Tariff:             1,

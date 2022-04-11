@@ -16,25 +16,21 @@ func NewIaxBuddiesRepository() IaxBuddiesRepository {
 	repo := IaxBuddiesRepository{}
 	return repo
 }
-func (repo *IaxBuddiesRepository) CreateIaxBuddies(ctx context.Context, iaxBuddies model.IaxBuddies) (model.IaxBuddies, error) {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&iaxBuddies).Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return iaxBuddies, errors.New("create iaxBuddies failed")
-
-	} else if err != nil {
-		return iaxBuddies, err
-
+func (repo *IaxBuddiesRepository) CreateIaxBuddies(ctx context.Context, iaxBuddies *model.IaxBuddies) error {
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(iaxBuddies).Exec(ctx)
+	if err != nil {
+		return err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return errors.New("create iaxBuddies failed")
 	}
-	return iaxBuddies, nil
+	return nil
 }
-func (repo *IaxBuddiesRepository) CreateIaxBuddiesTransaction(ctx context.Context, iaxBuddies model.IaxBuddies) (model.IaxBuddies, error) {
+func (repo *IaxBuddiesRepository) CreateIaxBuddiesTransaction(ctx context.Context, iaxBuddies *model.IaxBuddies) error {
 	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&iaxBuddies).Exec(ctx)
-	if affected, _ := resp.RowsAffected(); affected == -1 {
-		return iaxBuddies, errors.New("create iaxBuddies failed")
-
-	} else if err != nil {
-		return iaxBuddies, err
-
+	if err != nil {
+		return err
+	} else if affected, _ := resp.RowsAffected(); affected == -1 {
+		return errors.New("create iaxBuddies failed")
 	}
-	return iaxBuddies, nil
+	return nil
 }
