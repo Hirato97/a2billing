@@ -26,7 +26,7 @@ func (repo *IaxBuddiesRepository) CreateIaxBuddies(ctx context.Context, iaxBuddi
 	return nil
 }
 func (repo *IaxBuddiesRepository) CreateIaxBuddiesTransaction(ctx context.Context, iaxBuddies *model.IaxBuddies) error {
-	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(&iaxBuddies).Exec(ctx)
+	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(iaxBuddies).Exec(ctx)
 	if err != nil {
 		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {

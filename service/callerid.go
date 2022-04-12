@@ -34,10 +34,11 @@ func (service *CallerIdService) AddCallerIdToCard(ctx context.Context, agentId, 
 	} else if callerIdRes != nil {
 		return response.BadRequestMsg("caller_id is already exists")
 	}
-	if err := db.CallerIdRepo.CreateCallerId(ctx, &model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}); err != nil {
+	callerId := model.CallerId{Cid: cid, IDCcCard: card.ID, Activated: "t"}
+	if err := db.CallerIdRepo.CreateCallerId(ctx, &callerId); err != nil {
 		log.Error(err)
 		return response.ServiceUnavailableMsg("create customer invalid")
-	} else if callerIdRes.ID < 1 {
+	} else if callerId.ID < 1 {
 		return response.ServiceUnavailableMsg("create customer invalid")
 	} else {
 		userId, _ := strconv.Atoi(agentId)
