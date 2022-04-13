@@ -33,10 +33,8 @@ func (repo *CallerIdRepository) GetCallerIdByCid(ctx context.Context, agentId, c
 
 	if err == sql.ErrNoRows {
 		return nil, nil
-
 	} else if err != nil {
 		return nil, err
-
 	}
 	return callerId, nil
 }
@@ -47,7 +45,6 @@ func (repo *CallerIdRepository) CreateCallerId(ctx context.Context, callerId *mo
 		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return errors.New("create callerId failed")
-
 	}
 	return nil
 }
@@ -57,7 +54,6 @@ func (repo *CallerIdRepository) CreateCallerIdTransaction(ctx context.Context, c
 		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return errors.New("create callerId failed")
-
 	}
 	return nil
 }
@@ -66,12 +62,10 @@ func (repo *CallerIdRepository) UpdateCallerIdToCard(ctx context.Context, id int
 		Set("id_cc_card = ?", cardId).
 		Where("id = ?", id).
 		Exec(ctx)
-
 	if err != nil {
 		return false, err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return false, errors.New("update failed")
-
 	}
 	return true, nil
 }

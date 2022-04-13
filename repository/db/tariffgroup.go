@@ -28,7 +28,6 @@ func (repo *TariffGroup) GetTariffGroupById(ctx context.Context, id int64) (*mod
 
 	if err == sql.ErrNoRows {
 		return nil, nil
-
 	} else if err != nil {
 		return nil, err
 	}

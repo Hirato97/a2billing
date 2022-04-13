@@ -101,5 +101,3 @@ type CardInfo struct {
 	// CallerIds      []CallerId `bun:"foreignKey:IDCcCard ,references:ID" json:"caller_ids"` //
 	CallerId []*CallerId `bun:"rel:has-many,join:id=id_cc_card" json:"caller_ids"`
 }
-
-// TableName sets the insert table name for this struct type

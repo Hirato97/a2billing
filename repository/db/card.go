@@ -4,9 +4,8 @@ import (
 	"a2billing-go-api/common/model"
 	"a2billing-go-api/repository"
 	"context"
-	"errors"
-
 	"database/sql"
+	"errors"
 )
 
 type CardRepository struct {
@@ -43,14 +42,11 @@ func (repo *CardRepository) UpdateCCardCreditOfAgent(ctx context.Context, id str
 		Set("credit = ?", credit).
 		Where("id = ?", id).
 		Exec(ctx)
-
 	if err != nil {
 		return false, err
-
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return false, errors.New("update failed")
 	}
-
 	return true, nil
 }
 
@@ -63,7 +59,6 @@ func (repo *CardRepository) UpdateCCardStatusOfAgent(ctx context.Context, id str
 		return false, err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return false, errors.New("update failed")
-
 	}
 	return true, nil
 }
@@ -92,24 +87,17 @@ func (repo *CardRepository) CreateCard(ctx context.Context, card *model.Card) er
 	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(card).Exec(ctx)
 	if err != nil {
 		return err
-
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return errors.New("create card failed")
-
 	}
-
 	return nil
 }
 func (repo *CardRepository) CreateCardTransaction(ctx context.Context, card *model.Card) error {
 	resp, err := repository.BillingSqlClient.GetDB().NewInsert().Model(card).Exec(ctx)
-
 	if err != nil {
 		return err
-
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return errors.New("create card failed")
-
 	}
-
 	return nil
 }

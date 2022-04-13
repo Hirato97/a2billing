@@ -57,5 +57,3 @@ type IaxBuddies struct {
 	Maxcallnumbers             string `bun:"maxcallnumbers" json:"maxcallnumbers"`                           //
 	MaxcallnumbersNonvalidated string `bun:"maxcallnumbers_nonvalidated" json:"maxcallnumbers_nonvalidated"` //
 }
-
-// TableName sets the insert table name for this struct type

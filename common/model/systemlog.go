@@ -20,5 +20,3 @@ type SystemLog struct {
 	Creationdate  time.Time `bun:"creationdate" json:"creationdate"`        //
 	Agent         int64     `bun:"agent,nullzero" json:"agent"`             //
 }
-
-// TableName sets the insert table name for this struct type

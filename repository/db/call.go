@@ -56,7 +56,6 @@ func (repo *CallRepository) GetCallLogs(ctx context.Context, agentId, cardId, so
 	count, err := query.Limit(limit).Offset(offset).ScanAndCount(ctx)
 	if err == sql.ErrNoRows {
 		return result, 0, nil
-
 	} else if err != nil {
 		return nil, 0, err
 	}

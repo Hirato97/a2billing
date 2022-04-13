@@ -23,8 +23,6 @@ func (repo *SystemLogRepository) CreateLog(ctx context.Context, systemLog *model
 		return err
 	} else if affected, _ := resp.RowsAffected(); affected == -1 {
 		return errors.New("create failed")
-
 	}
-
 	return nil
 }

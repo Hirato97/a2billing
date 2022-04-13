@@ -21,12 +21,7 @@ type Server struct {
 
 func NewServer() *Server {
 	engine := gin.New()
-	// engine.Use(cors.Default())
 	engine.Use(gin.Recovery())
-	// engine.Use(cors.New(cors.Config{
-	// 	AllowOrigins: []string{"*"},
-	// 	AllowMethods: []string{"*"},
-	// }))
 	engine.Use(CORSMiddleware())
 	mdw.SetupGoGuardian()
 	engine.GET("/", func(c *gin.Context) {

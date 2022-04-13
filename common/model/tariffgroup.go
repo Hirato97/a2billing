@@ -10,5 +10,3 @@ type TariffGroup struct {
 	Iduser        int    `bun:"iduser" json:"iduser"`                   //
 	Loglevel      string `bun:"tariffgroupname" json:"tariffgroupname"` //
 }
-
-// TableName sets the insert table name for this struct type

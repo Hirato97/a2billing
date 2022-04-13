@@ -67,5 +67,3 @@ type SipBuddies struct {
 	Useragent         string `bun:"useragent,nullzero" json:"useragent"`                 //
 	Callbackextension string `bun:"callbackextension,nullzero" json:"callbackextension"` //
 }
-
-// TableName sets the insert table name for this struct type
