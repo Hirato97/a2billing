@@ -82,7 +82,7 @@ type Card struct {
 }
 
 type CardInfo struct {
-	bun.BaseModel `bun:"cc_card"`
+	bun.BaseModel `bun:"cc_card,alias:c"`
 	ID            int64     `bun:"id,pk,autoincrement" json:"id"`    //
 	Creationdate  time.Time `bun:"creationdate" json:"creationdate"` //
 	// Firstusedate   time.Time `bun:"firstusedate" json:"firstusedate"`          //
@@ -99,7 +99,7 @@ type CardInfo struct {
 	IDGroup int   `bun:"id_group" json:"id_group"`         //
 	Tariff  int64 `bun:"tariff,nullzero" json:"call_plan"` //
 	// CallerIds      []CallerId `bun:"foreignKey:IDCcCard ,references:ID" json:"caller_ids"` //
-	// CallerIds []CallerId `bun:"rel:has-many,join:id=id_cc_card" json:"caller_ids"`
+	CallerId []*CallerId `bun:"rel:has-many,join:id=id_cc_card" json:"caller_ids"`
 }
 
 // TableName sets the insert table name for this struct type

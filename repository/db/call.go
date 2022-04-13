@@ -4,6 +4,9 @@ import (
 	"a2billing-go-api/repository"
 	"context"
 	"database/sql"
+	"time"
+
+	"github.com/uptrace/bun"
 )
 
 type CallRepository struct {
@@ -16,12 +19,23 @@ func NewCallRepository() CallRepository {
 
 var CallRepo CallRepository
 
-func (repo *CallRepository) GetCallLogs(ctx context.Context, agentId, cardId, source string, fromDate, toDate string, limit, offset int) (interface{}, int, error) {
-	result := []map[string]interface{}{}
+type CallLog struct {
+	bun.BaseModel `bun:"cc_call,alias:ca"`
+	ID            int64     `bun:"id,pk" json:"id"`
+	Starttime     time.Time `bun:"starttime" json:"start_time"`
+	Stoptime      time.Time `bun:"stoptime" json:"end_time"`
+	Sessiontime   int64     `bun:"sessiontime,nullzero" json:"duration"`
+	Sessionbill   float64   `bun:"sessionbill" json:"amount"`
+	Uniqueid      string    `bun:"uniqueid" json:"uniqueid"`
+	Calledstation string    `bun:"calledstation" json:"destination"`
+	Src           string    `bun:"src" json:"source"`
+}
+
+func (repo *CallRepository) GetCallLogs(ctx context.Context, agentId, cardId, source string, fromDate, toDate string, limit, offset int) (*[]CallLog, int, error) {
+	result := new([]CallLog)
 	var count int
-	field := "ca.id as id, ca.uniqueid as uniqueid, ca.starttime as start_time, ca.stoptime as end_time, ca.sessiontime as duration, ca.sessionbill as amount, ca.src as source, ca.calledstation as destination"
-	query := repository.BillingSqlClient.GetDB().NewSelect().Model(&result).
-		TableExpr("cc_call AS ca").
+	field := "ca.id, ca.starttime, ca.stoptime, ca.sessiontime, ca.sessionbill, ca.uniqueid, ca.src, ca.calledstation"
+	query := repository.BillingSqlClient.GetDB().NewSelect().Model(result).
 		ColumnExpr(field).
 		Join("JOIN cc_card c ON c.id = ca.card_id").
 		Join("JOIN cc_card_group cg ON c.id_group = cg.id").
@@ -45,7 +59,6 @@ func (repo *CallRepository) GetCallLogs(ctx context.Context, agentId, cardId, so
 
 	} else if err != nil {
 		return nil, 0, err
-
 	}
 	return result, count, nil
 }

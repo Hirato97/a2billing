@@ -27,7 +27,6 @@ func (repo *CallerIdRepository) GetCallerIdByCid(ctx context.Context, agentId, c
 		ColumnExpr("ccid.id, ccid.cid, ccid.id_cc_card, ccid.activated").
 		Join("INNER JOIN cc_card c ON c.id = ccid.id_cc_card").
 		Join("INNER JOIN cc_card_group cg ON c.id_group = cg.id").
-		// Relation("CardInfo").
 		Where("cg.id_agent = ?", agentId).
 		Where("ccid.cid = ?", cid).
 		Limit(1).Scan(ctx)

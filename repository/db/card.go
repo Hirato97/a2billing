@@ -23,9 +23,9 @@ func (repo *CardRepository) GetCardsOfAgent(ctx context.Context, agentId string,
 	cards := new([]model.CardInfo)
 	var count int
 	resp := repository.BillingSqlClient.GetDB().NewSelect().Model(cards).
-		TableExpr("cc_card AS c").
 		ColumnExpr("c.id, c.creationdate, c.firstusedate, c.expirationdate, c.enableexpire, c.expiredays, c.username, c.useralias, c.credit, c.activated, c.status, c.lastuse, c.creditlimit, c.id_group, c.tariff").
 		Join("JOIN cc_card_group cg ON c.id_group = cg.id").
+		Relation("CallerId").
 		Where("cg.id_agent = ?", agentId).Order("c.id ASC").
 		Limit(limit).Offset(offset)
 	count, err := resp.ScanAndCount(ctx)
@@ -71,10 +71,11 @@ func (repo *CardRepository) UpdateCCardStatusOfAgent(ctx context.Context, id str
 func (repo *CardRepository) GetCardOfAgentById(ctx context.Context, agentId, id string) (*model.CardInfo, error) {
 	card := new(model.CardInfo)
 	err := repository.BillingSqlClient.GetDB().NewSelect().Model(card).
-		TableExpr("cc_card AS c").
+		// TableExpr("cc_card AS c").
 		ColumnExpr("c.id, c.creationdate, c.firstusedate, c.expirationdate, c.enableexpire, c.expiredays, c.username, c.useralias, c.credit, c.activated, c.status, c.lastuse, c.creditlimit, c.id_group, c.tariff").
 		Join("JOIN cc_card_group cg ON c.id_group = cg.id").
 		Join("JOIN cc_callerid ccid ON ccid.id_cc_card = c.id").
+		Relation("CallerId").
 		Where("cg.id_agent = ?", agentId).
 		Where("c.id = ? OR c.username = ? OR ccid.cid = ?", id, id, id).
 		Limit(1).

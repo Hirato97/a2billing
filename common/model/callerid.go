@@ -6,11 +6,10 @@ import (
 
 type CallerId struct {
 	bun.BaseModel `bun:"cc_callerid"`
-	ID            int64  `bun:"id,pk,autoincrement" json:"id"` //
-	Cid           string `bun:"cid" json:"cid"`                //
-	IDCcCard      int64  `bun:"id_cc_card" json:"id_cc_card"`  //
-	Activated     string `bun:"activated" json:"activated"`    //
-	// CardInfo      []CardInfo `bun:"rel:has-many" json:"cc_card"`
+	ID            int64  `bun:"id,pk,autoincrement"`        //
+	Cid           string `bun:"cid" json:"cid"`             //
+	IDCcCard      int64  `bun:"id_cc_card"`                 //
+	Activated     string `bun:"activated" json:"activated"` //
 }
 
 // TableName sets the insert table name for this struct type
