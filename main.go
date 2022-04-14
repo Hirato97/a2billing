@@ -2,10 +2,10 @@ package main
 
 import (
 	"a2billing-go-api/api"
-	"a2billing-go-api/common/auth"
 	IRedis "a2billing-go-api/internal/redis"
 	redis "a2billing-go-api/internal/redis/driver"
 	mysql "a2billing-go-api/internal/sqldb/mysql/driver"
+	"a2billing-go-api/middleware/auth/goauth"
 	"a2billing-go-api/repository"
 	"a2billing-go-api/repository/db"
 	"a2billing-go-api/service"
@@ -101,7 +101,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	auth.GoAuthClient, err = auth.NewGoAuth(auth.GoAuth{
+	goauth.GoAuthClient, err = goauth.NewGoAuth(goauth.GoAuth{
 		RedisExpiredIn: viper.GetInt(`oauth.expired_in`),
 		TokenType:      viper.GetString(`oauth.tokenType`),
 		RedisTokenKey:  "access_token_key",

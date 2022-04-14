@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	mdw "a2billing-go-api/internal/middleware"
+	mdw "a2billing-go-api/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"

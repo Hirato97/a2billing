@@ -3,7 +3,7 @@ package api
 import (
 	dataUtil "a2billing-go-api/common/data"
 	"a2billing-go-api/common/response"
-	mdw "a2billing-go-api/internal/middleware"
+	mdw "a2billing-go-api/middleware/auth"
 	"a2billing-go-api/service"
 	"time"
 
@@ -65,7 +65,7 @@ func (handler *CallHandler) GetCallLogs(c *gin.Context) {
 	customerId := c.Query("customer_id")
 	limit := dataUtil.ParseLimit(c.Query("limit"))
 	offset := dataUtil.ParseOffset(c.Query("offset"))
-	code, result := handler.CallService.GetCallLogs(&gin.Context{}, id.(string), customerId, source, startDate, endDate, limit, offset)
+	code, result := handler.CallService.GetCallLogs(&gin.Context{}, id, customerId, source, startDate, endDate, limit, offset)
 	c.JSON(code, result)
 
 }

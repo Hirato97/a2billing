@@ -1,4 +1,4 @@
-package auth
+package goauth
 
 import (
 	"context"
@@ -48,7 +48,7 @@ type GoAuth struct {
 }
 
 type AuthClient struct {
-	ClienId      string            `json:"client_id"`
+	ClientId     string            `json:"client_id"`
 	UserId       string            `json:"user_id"`
 	Token        string            `json:"token"`
 	RefreshToken string            `json:"refresh_token"`
@@ -146,7 +146,7 @@ func (g *GoAuth) GetUserFromRedis(clientId string) (interface{}, error) {
 }
 
 func (g *GoAuth) InsertClientToRedis(client AuthClient) error {
-	clientId := client.ClienId
+	clientId := client.ClientId
 	token := client.Token
 	jsonClient, err := json.Marshal(client)
 	if err != nil {
@@ -165,7 +165,7 @@ func (g *GoAuth) InsertClientToRedis(client AuthClient) error {
 }
 
 func (g *GoAuth) DeleteClientFromRedis(client AuthClient) error {
-	clientId := client.ClienId
+	clientId := client.ClientId
 	token := client.Token
 	err := g.RedisClient.HDel(ctx, g.RedisUserKey, clientId).Err()
 	if err != nil {
@@ -188,10 +188,10 @@ func (g *GoAuth) CreateClient(client AuthClient) AuthClient {
 	}
 	expiredTime := currentTime.Add(time.Duration(expiredIn) * time.Second)
 	accesstoken := AuthClient{
-		ClienId:      client.ClienId,
+		ClientId:     client.ClientId,
 		UserId:       client.UserId,
-		Token:        GenerateToken(client.ClienId),
-		RefreshToken: GenerateRefreshToken(client.ClienId),
+		Token:        GenerateToken(client.ClientId),
+		RefreshToken: GenerateRefreshToken(client.ClientId),
 		CreatedTime:  currentTime,
 		ExpiredTime:  expiredTime,
 		Scope:        client.Scope,
@@ -213,9 +213,9 @@ func (g *GoAuth) ClientCredential(client AuthClient, isRefresh bool) (AuthClient
 	return clientResponse, nil
 }
 func (g *GoAuth) CheckClientInRedis(client AuthClient) (AuthClient, error) {
-	log.Info("ClientCredential - clientId : ", client.ClienId)
+	log.Info("ClientCredential - clientId : ", client.ClientId)
 	var clientNew AuthClient
-	clientRes, err := g.GetUserFromRedis(client.ClienId)
+	clientRes, err := g.GetUserFromRedis(client.ClientId)
 	if err != nil {
 		return clientNew, err
 	}
@@ -226,7 +226,7 @@ func (g *GoAuth) CheckClientInRedis(client AuthClient) (AuthClient, error) {
 			return clientNew, errors.New("parse client json failed")
 		}
 	}
-	if clientNew.ClienId == "" {
+	if clientNew.ClientId == "" {
 		clientNew = g.CreateClient(client)
 		if err := g.InsertClientToRedis(clientNew); err != nil {
 			return clientNew, err
@@ -274,7 +274,7 @@ func (g *GoAuth) CreateClientResponse(client AuthClient, isRefresh bool) (AuthCl
 	if !isRefresh {
 		response = AuthClient{
 			CreatedTime: client.CreatedTime,
-			ClienId:     client.ClienId,
+			ClientId:    client.ClientId,
 			UserId:      client.UserId,
 			Token:       client.Token,
 			ExpiredTime: client.ExpiredTime,
@@ -286,7 +286,7 @@ func (g *GoAuth) CreateClientResponse(client AuthClient, isRefresh bool) (AuthCl
 	} else {
 		response = AuthClient{
 			CreatedTime:  client.CreatedTime,
-			ClienId:      client.ClienId,
+			ClientId:     client.ClientId,
 			UserId:       client.UserId,
 			Token:        client.Token,
 			ExpiredTime:  client.ExpiredTime,

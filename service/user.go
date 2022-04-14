@@ -1,9 +1,9 @@
 package service
 
 import (
-	"a2billing-go-api/common/auth"
 	"a2billing-go-api/common/log"
 	"a2billing-go-api/common/response"
+	"a2billing-go-api/middleware/auth/goauth"
 	"a2billing-go-api/repository/db"
 	"context"
 	"fmt"
@@ -28,12 +28,12 @@ func (service *AgentService) GenerateTokenByApiKey(ctx context.Context, apiKey s
 		return response.NotFound()
 	}
 
-	clientAuth := auth.AuthClient{
-		ClienId:  apiKey,
+	clientAuth := goauth.AuthClient{
+		ClientId: apiKey,
 		UserId:   fmt.Sprintf("%d", Agent.ID),
 		UserData: map[string]string{},
 	}
-	client, err := auth.GoAuthClient.ClientCredential(clientAuth, false)
+	client, err := goauth.GoAuthClient.ClientCredential(clientAuth, false)
 	if err != nil {
 		log.Error(err)
 		return response.ServiceUnavailableMsg(err.Error())
@@ -43,7 +43,7 @@ func (service *AgentService) GenerateTokenByApiKey(ctx context.Context, apiKey s
 		return response.ServiceUnavailableMsg(err.Error())
 	}
 	token := gin.H{
-		"client_id":     client.ClienId,
+		"client_id":     client.ClientId,
 		"user_id":       client.UserId,
 		"token":         client.Token,
 		"refresh_token": client.RefreshToken,

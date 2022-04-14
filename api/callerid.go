@@ -3,7 +3,7 @@ package api
 import (
 	"a2billing-go-api/common/response"
 	"a2billing-go-api/common/validator"
-	mdw "a2billing-go-api/internal/middleware"
+	mdw "a2billing-go-api/middleware/auth"
 	"a2billing-go-api/service"
 	"net/http"
 
@@ -44,7 +44,7 @@ func (handler *CallerIdHandler) AddCallerIdToCard(c *gin.Context) {
 	}
 	cardId, _ := jsonBody["user_id"].(string)
 	callerId, _ := jsonBody["cid"].(string)
-	code, result := handler.CallerIdService.AddCallerIdToCard(c, userId.(string), cardId, callerId)
+	code, result := handler.CallerIdService.AddCallerIdToCard(c, userId, cardId, callerId)
 	c.JSON(code, result)
 }
 
@@ -71,6 +71,6 @@ func (handler *CallerIdHandler) UpdateCallerIdToCard(c *gin.Context) {
 		c.JSON(response.BadRequestMsg("user_id is required"))
 		return
 	}
-	code, result := handler.CallerIdService.UpdateCallerIdToCard(c, userId.(string), id, cardId)
+	code, result := handler.CallerIdService.UpdateCallerIdToCard(c, userId, id, cardId)
 	c.JSON(code, result)
 }

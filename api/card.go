@@ -5,7 +5,7 @@ import (
 	"a2billing-go-api/common/model"
 	"a2billing-go-api/common/response"
 	"a2billing-go-api/common/validator"
-	mdw "a2billing-go-api/internal/middleware"
+	mdw "a2billing-go-api/middleware/auth"
 	"a2billing-go-api/service"
 	"fmt"
 	"net/http"
@@ -42,7 +42,7 @@ func (handler *CardHandler) GetCards(c *gin.Context) {
 	}
 	limit := dataUtil.ParseLimit(c.Query("limit"))
 	offset := dataUtil.ParseOffset(c.Query("offset"))
-	code, result := handler.CardService.GetCardsOfAgent(c, id.(string), limit, offset)
+	code, result := handler.CardService.GetCardsOfAgent(c, id, limit, offset)
 	c.JSON(code, result)
 }
 
@@ -53,7 +53,7 @@ func (handler *CardHandler) GetCardById(c *gin.Context) {
 		return
 	}
 	id := c.Param("id")
-	code, result := handler.CardService.GetCardsOfAgentById(c, userId.(string), id)
+	code, result := handler.CardService.GetCardsOfAgentById(c, userId, id)
 	c.JSON(code, result)
 }
 
@@ -76,7 +76,7 @@ func (handler *CardHandler) UpdateCardCredit(c *gin.Context) {
 		return
 	}
 	credit, _ := jsonBody["credit"].(float64)
-	code, result := handler.CardService.UpdateCardCreditOfAgent(c, userId.(string), id, credit)
+	code, result := handler.CardService.UpdateCardCreditOfAgent(c, userId, id, credit)
 	c.JSON(code, result)
 }
 
@@ -99,7 +99,7 @@ func (handler *CardHandler) AddCardCredit(c *gin.Context) {
 		return
 	}
 	credit, _ := jsonBody["credit"].(float64)
-	code, result := handler.CardService.AddCardCreditOfAgent(c, userId.(string), id, credit)
+	code, result := handler.CardService.AddCardCreditOfAgent(c, userId, id, credit)
 	c.JSON(code, result)
 }
 
@@ -123,7 +123,7 @@ func (handler *CardHandler) UpdateCardStatus(c *gin.Context) {
 	}
 	status, _ := jsonBody["status"].(string)
 	statusInt := dataUtil.STATUS_MAP[status]
-	code, result := handler.CardService.UpdateCardStatusOfAgent(c, userId.(string), id, statusInt)
+	code, result := handler.CardService.UpdateCardStatusOfAgent(c, userId, id, statusInt)
 	c.JSON(code, result)
 }
 
@@ -202,6 +202,6 @@ func (handler *CardHandler) CreateCard(c *gin.Context) {
 		c.JSON(response.BadRequestMsg("cid is missing"))
 		return
 	}
-	code, result := handler.CardService.CreateCardAndSip(c, userId.(string), card, cid)
+	code, result := handler.CardService.CreateCardAndSip(c, userId, card, cid)
 	c.JSON(code, result)
 }

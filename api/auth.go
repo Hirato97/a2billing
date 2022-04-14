@@ -3,7 +3,7 @@ package api
 import (
 	_ "a2billing-go-api/common/data"
 	"a2billing-go-api/common/response"
-	mdw "a2billing-go-api/internal/middleware"
+	mdw "a2billing-go-api/middleware/auth"
 	Service "a2billing-go-api/service"
 
 	"github.com/gin-gonic/gin"
